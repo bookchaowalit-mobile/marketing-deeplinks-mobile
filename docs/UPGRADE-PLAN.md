@@ -26,6 +26,7 @@ Score: 7.5/10 — inspector/builder with edge-case-tested logic (ports, opaque s
 - Bug fix: `mailto`/`tel`/`sms`/`geo` links were built as `mailto:///a@b.com`; they are now `mailto:a@b.com` (with `+` in the query still encoded).
 - Copy button for the built link (disabled while the builder shows an error); built link is a live region; warning icons have a semantic label.
 - Edge-case unit tests: malformed escapes, empty/whitespace/unparsable input, host:port and bad hosts, opaque schemes, Thai/emoji round trip. Widget tests: copy to clipboard, disabled copy with host error, empty-link state, a11y guidelines, 200% text scale.
+- The 200% text-scale widget test now runs at a 360 px phone width (it previously used the 800 px default test surface); no overflow found.
 
 ## Done in pass 2
 
