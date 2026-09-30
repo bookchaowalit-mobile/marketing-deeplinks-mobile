@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../logic/deeplink.dart';
 
@@ -59,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final info = inspectLink(_input.text);
+    final built = _built();
     return Scaffold(
       appBar: AppBar(title: const Text('Deeplinks')),
       body: ListView(
@@ -101,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Icon(
                 Icons.warning_amber,
                 color: Theme.of(context).colorScheme.error,
+                semanticLabel: 'Warning',
               ),
               title: Text(w),
             ),
@@ -117,10 +120,33 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(child: _field(_value, 'Param value', 'value-input')),
             ],
           ),
-          SelectableText(
-            _built(),
-            key: const Key('built-link'),
-            style: textTheme.titleSmall,
+          Row(
+            children: [
+              Expanded(
+                child: Semantics(
+                  liveRegion: true,
+                  child: SelectableText(
+                    built,
+                    key: const Key('built-link'),
+                    style: textTheme.titleSmall,
+                  ),
+                ),
+              ),
+              IconButton(
+                key: const Key('copy-link'),
+                tooltip: 'Copy link',
+                icon: const Icon(Icons.copy),
+                onPressed: built.startsWith('Error:')
+                    ? null
+                    : () async {
+                        await Clipboard.setData(ClipboardData(text: built));
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Link copied')),
+                        );
+                      },
+              ),
+            ],
           ),
         ],
       ),
